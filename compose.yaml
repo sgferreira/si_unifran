@@ -1,0 +1,35 @@
+services:
+  db:
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_NAME:?Defina DB_NAME no .env}
+      MYSQL_USER: ${DB_USER:?Defina DB_USER no .env}
+      MYSQL_PASSWORD: ${DB_PASS:?Defina DB_PASS no .env}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASS:?Defina DB_ROOT_PASS no .env}
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+      - ./database/seed.sql:/docker-entrypoint-initdb.d/02-seed.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -p$$MYSQL_ROOT_PASSWORD --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+  web:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "${APP_PORT:-8080}:80"
+    environment:
+      DB_HOST: db
+      DB_NAME: ${DB_NAME:?Defina DB_NAME no .env}
+      DB_USER: ${DB_USER:?Defina DB_USER no .env}
+      DB_PASS: ${DB_PASS:?Defina DB_PASS no .env}
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      db:
+        condition: service_healthy
+volumes:
+  mysql_data:
