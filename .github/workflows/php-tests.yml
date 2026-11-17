@@ -1,0 +1,22 @@
+name: Verificação PHP
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  php:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Obter código-fonte
+        uses: actions/checkout@v4
+      - name: Mostrar versão do PHP
+        run: php --version
+      - name: Verificar sintaxe de todos os arquivos PHP
+        run: find src public scripts tests -name '*.php' -print0 | xargs -0 -n1 php -l
+      - name: Executar testes unitários
+        run: php tests/UnitTest.php
