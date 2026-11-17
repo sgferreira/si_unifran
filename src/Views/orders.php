@@ -1,0 +1,5 @@
+<?php declare(strict_types=1); use App\Core\OrderStatus; ?>
+<section class="page-section container"><div class="page-heading"><span class="eyebrow">ACOMPANHE CADA MOMENTO</span><h1>Meus <em>pedidos</em></h1><p>Veja o que já encomendou e acompanhe cada etapa.</p></div>
+<?php if (!$orders): ?><div class="empty-state"><span aria-hidden="true">♡</span><h2>Sua história doce começa aqui</h2><p>Você ainda não fez nenhum pedido.</p><a class="button button-primary" href="/">Conhecer o cardápio →</a></div>
+<?php else: ?><div class="order-list"><?php foreach ($orders as $order): ?><article class="order-card"><div><span class="eyebrow">PEDIDO #<?= e($order['id']) ?></span><h2><?= date('d/m/Y H:i', strtotime($order['criado_em'])) ?></h2><p>Pagamento <?= e($order['metodo']) ?> · <?= brl($order['total']) ?></p></div><div class="order-card-actions"><span class="status-badge"><?= e(OrderStatus::label($order['status'])) ?></span><a class="button button-outline" href="/pedido?id=<?= e($order['id']) ?>">Ver detalhes →</a></div></article><?php endforeach; ?></div><?php endif; ?>
+</section>
