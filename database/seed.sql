@@ -1,6 +1,8 @@
 -- Dados fictícios para demonstração. Executado somente no primeiro start do MySQL.
 USE doce_instante;
 
+SET NAMES utf8mb4;
+
 INSERT INTO produtos (categoria_id, nome, descricao, preco, estoque) VALUES
 ((SELECT id FROM categorias WHERE nome='Cupcakes'), 'Red Velvet', 'Massa vermelha macia, cobertura de cream cheese e toque de baunilha.', 16.90, 30),
 ((SELECT id FROM categorias WHERE nome='Cupcakes'), 'Chocolate Belga', 'Chocolate intenso com ganache cremosa e raspas delicadas.', 17.90, 25),
